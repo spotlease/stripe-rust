@@ -7,3 +7,12 @@ authors = ["Nick Cardin <nick@cardin.email>"]
 serde = "1.0"
 serde_derive = "1.0"
 serde_json = "1.0"
+reqwest = "0.8"
+
+[dependencies.resx]
+git = "https://github.com/spotlease/resx"
+rev = "1cbe61f60ddb1fddd9b7fa8a0f9b7133cebc1567"
+
+[dependencies.resx_derives]
+git = "https://github.com/spotlease/resx"
+rev = "1cbe61f60ddb1fddd9b7fa8a0f9b7133cebc1567"

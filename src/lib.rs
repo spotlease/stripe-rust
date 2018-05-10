@@ -1,23 +1,51 @@
 extern crate serde;
 extern crate serde_json;
 #[macro_use] extern crate serde_derive;
+extern crate reqwest;
+extern crate resx;
+#[macro_use] extern crate resx_derives;
 
-mod stripe_models;
 mod client;
 mod models;
 mod request;
+mod error;
+mod request_builders;
 
 pub use client::Client;
 pub use request::Request;
+pub use models::*;
+pub use request_builders::*;
+pub use error::Error;
+
+use request_builders::RootRB;
+
+pub fn request() -> RootRB {
+    RootRB::new()
+}
 
 #[cfg(test)]
 mod tests {
     use super::{Request, Client};
+    use super::request_builders::StripeResourceRB;
 
     #[test]
-    fn account_list_bank_accounts() {
-        let client = Client {};
-        let result = Request::build().list_accounts().execute(&client);
+    fn list_accounts() {
+        let secret_key = "sk_test_b7OIZOj9iD00hccDQcHakkmk";
+        let client = Client::builder(secret_key).build().unwrap();
+        let result = super::request().account().list_all()
+            .send(&client);
+        println!("{:#?}", result);
         assert!(result.is_ok());
     }
+
+    // #[test]
+    // fn account_list_bank_accounts() {
+
+    //     let secret_key = "sk_test_b7OIZOj9iD00hccDQcHakkmk";
+    //     let client = Client::builder(secret_key).build().unwrap();
+    //     let result = RootRB::new().account().list()
+    //         .send(&client);
+    //     println!("{:?}", result);
+    //     assert!(result.is_ok());
+    // }
 }

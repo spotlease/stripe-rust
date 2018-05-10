@@ -1,49 +1,52 @@
-use std::marker::PhantomData;
+use reqwest::Method;
 use serde::de::DeserializeOwned;
-use serde_json;
+use serde::ser::Serialize;
+use std::marker::PhantomData;
 
-use models;
-use stripe_models::{List, StripeResult};
 use client::Client;
+use models::Result as StripeResult;
 
-pub struct Request;
-
-impl Request {
-    pub fn build() -> Self {
-        Request {}
-    }
-    pub fn list_accounts(self) -> ExecutableRequest<models::Account> {
-        ExecutableRequest::new()
-    }
-    // pub fn for_account(self) {
-
-    // }
+pub struct Request<Q: Serialize, B: Serialize, R: DeserializeOwned> {
+    pub method: Method,
+    pub path: String,
+    pub query: Option<Q>,
+    pub body: Option<B>,
+    _marker: PhantomData<R>,
 }
 
-// struct AccountRequest;
-
-// impl AccountRequest {
-//     pub fn retrive(self) {
-
-//     }
-// }
-
-pub struct ExecutableRequest<T: DeserializeOwned> {
-    _marker: PhantomData<T>,
-}
-
-impl<T: DeserializeOwned> ExecutableRequest<T> {
-    pub fn new() -> Self {
-        ExecutableRequest {
-            _marker: PhantomData
+impl<Q: Serialize, B: Serialize, R: DeserializeOwned> Request<Q, B, R> {
+    pub fn new(method: Method, path: String) -> Self {
+        Self {
+            method: method,
+            path: path,
+            query: None,
+            body: None,
+            _marker: PhantomData,
         }
     }
-
-    pub fn execute(self, client: &Client) -> StripeResult<T> {
-        let json = r#"{
-                        "data":"asd"
-                      }"#;
-        let result = serde_json::from_str(json).unwrap();
-        Ok(result)
+    pub fn new_with_query(method: Method, path: String, query: Q) -> Self {
+        Self {
+            method: method,
+            path: path,
+            query: Some(query),
+            body: None,
+            _marker: PhantomData,
+        }
+    }
+    pub fn new_with_body(method: Method, path: String, body: B) -> Self {
+        Self {
+            method: method,
+            path: path,
+            query: None,
+            body: Some(body),
+            _marker: PhantomData,
+        }
+    }
+    pub fn send(self, client: &Client) -> StripeResult<R> {
+        client.execute(self)
     }
 }
+
+pub type SimpleRequest<R> = Request<(), (), R>;
+pub type RequestWithQuery<Q, R> = Request<Q, (), R>;
+pub type RequestWithBody<B, R> = Request<(), B, R>;
