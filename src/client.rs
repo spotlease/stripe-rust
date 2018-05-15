@@ -6,8 +6,9 @@ use std::time::Duration;
 use models::Result as StripeResult;
 use error::Error as StripeError;
 use error::RequestError as StripeRequestError;
-use request::Request;
+use request::{Request, RequestOptions};
 use reqwest;
+use reqwest::header::Headers;
 
 const DEFAULT_API_URL: &'static str = "https://api.stripe.com/v1/";
 
@@ -19,7 +20,7 @@ pub struct ClientBuilder {
 
 impl ClientBuilder {
     pub fn new<IntoString: Into<String>>(secret_key: IntoString) -> Self {
-        use reqwest::header::{Authorization, Basic, ContentType, Headers};
+        use reqwest::header::{Authorization, Basic, ContentType};
 
         let mut default_headers = Headers::new();
         default_headers.set(Authorization(Basic {
@@ -62,6 +63,11 @@ impl Client {
         ClientBuilder::new(secret_key)
     }
     pub fn execute<Q: Serialize, B: Serialize, R: DeserializeOwned>(&self, request: Request<Q, B, R>) -> StripeResult<R> {
+        let headers = Headers::new();
+        let options = RequestOptions { headers };
+        self.execute_with_options(request, options)
+    }
+    pub fn execute_with_options<Q: Serialize, B: Serialize, R: DeserializeOwned>(&self, request: Request<Q, B, R>, options: RequestOptions) -> StripeResult<R> {
 
         let mut reqwest_request_builder = self.inner.request(request.method, self.base_url.join(&request.path[1..])?);
 
@@ -72,6 +78,8 @@ impl Client {
         if let Some(ref request_body) = request.body {
             reqwest_request_builder.form(request_body);
         }
+
+        reqwest_request_builder.headers(options.headers);
 
         let reqwest_request = reqwest_request_builder.build()?;
 
