@@ -85,7 +85,7 @@ pub struct ChargeCreateParams<'a> {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub shipping: Option<ShippingDetails>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub customer: Option<String>,
+    pub customer: Option<&'a str>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub source: Option<ExternalAccountParam<'a>>,
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -98,7 +98,7 @@ pub struct ChargeCreateParams<'a> {
 #[derive(Default, Serialize)]
 pub struct ChargeUpdateParams<'a> {
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub customer: Option<String>,
+    pub customer: Option<&'a str>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub description: Option<&'a str>,
     #[serde(skip_serializing_if = "Option::is_none")]
