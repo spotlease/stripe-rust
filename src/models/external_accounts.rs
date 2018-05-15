@@ -9,51 +9,27 @@ use super::BankAccountUpdateParams;
 #[derive(Debug, Serialize)]
 pub struct ExternalAccountCreateParams<'a> {
     pub external_account: ExternalAccountParam<'a>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub default_for_currency: Option<bool>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub metadata: Option<Metadata>
 }
 
-#[derive(Debug)]
+#[derive(Debug, Serialize)]
+#[serde(untagged)]
 pub enum ExternalAccountParam<'a> {
     Token(&'a str),
-    // #[serde(serialize_with = "serialize_token")]
-    CardDetails(CardCreateParams<'a>),    
-    // #[serde(serialize_with = "serialize_token")]
-    BankAccountDetails(BankAccountCreateParams<'a>)
-}
-use serde::Serialize;
-use serde::Serializer;
-
-impl<'a> Serialize for ExternalAccountParam<'a> {
-    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-    where
-        S: Serializer,
-    {
-        match *self {
-            ExternalAccountParam::Token(ref token) => {
-                token.serialize(serializer)
-            }
-            ExternalAccountParam::CardDetails(ref card) => {
-                serializer.serialize_newtype_variant("ExternalAccountParam", 1, "CardDetails", card)
-                // let mut tv = serializer.serialize_tuple_variant("E", 0, "T", 1)?;
-                // card.serialize(serializer);
-                // serializer.serialize_field("type", "card")
-            }
-            ExternalAccountParam::BankAccountDetails(ref bank_account) => {
-                serializer.serialize_newtype_variant("ExternalAccountParam", 1, "BankAccountDetails", bank_account)
-            }
-        }
-    }
+    Details(ExternalAccountDetailParams<'a>)
 }
 
-// use serde::Serializer;
-// fn serialize_token<S>(card: &CardCreateParams, serializer: S) -> Result<S::Ok, S::Error> where S: Serializer {
-//     use serde::Serialize;
-//     use serde::ser::SerializeMap;
-//     card.serialize(serializer)?;
-//     serializer.serialize_entry("type", "card")?
-// }
-
+//TODO: support serialization
+#[derive(Debug, Serialize)]
+#[serde(rename_all = "snake_case")]
+#[serde(tag = "object")]
+pub enum ExternalAccountDetailParams<'a> {
+    Card(CardCreateParams<'a>),    
+    BankAccount(BankAccountCreateParams<'a>)
+}
 
 #[derive(Debug, Serialize)]
 #[serde(untagged)]

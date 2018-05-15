@@ -6,6 +6,7 @@ use request::{Request, SimpleRequest, RequestWithBody, RequestWithQuery};
 use self::account::AccountsRB;
 use self::customer::CustomersRB;
 use self::charge::ChargesRB;
+use self::transfer::TransfersRB;
 use models::{List, Deleted};
 use reqwest::Method;
 
@@ -21,6 +22,7 @@ macro_rules! resource {
 pub mod account;
 pub mod customer;
 pub mod charge;
+pub mod transfer;
 
 pub trait StripeResourceRB<LP, CP, M, IRB>: ResxPath
 where
@@ -71,4 +73,5 @@ impl RootRB {
     resource!(account, AccountsRB);
     resource!(customer, CustomersRB);
     resource!(charge, ChargesRB);
+    resource!(transfer, TransfersRB);
 }

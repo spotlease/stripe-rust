@@ -15,6 +15,7 @@ mod plan;
 mod charge;
 mod refund;
 mod deleted;
+mod transfer;
 
 pub use self::list::*;
 pub use self::params::*;
@@ -33,6 +34,7 @@ pub use self::plan::*;
 pub use self::charge::*;
 pub use self::refund::*;
 pub use self::deleted::*;
+pub use self::transfer::*;
 
 use error::Error as StripeError;
 
