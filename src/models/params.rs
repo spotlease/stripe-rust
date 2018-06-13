@@ -66,6 +66,8 @@ impl<T> RangeQuery<T> {
 
 pub type Metadata = HashMap<String, String>;
 pub type Timestamp = i64;
+pub type Identifier = String;
+pub type IdentifierParam<'a> = &'a str;
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(untagged)]
