@@ -59,7 +59,7 @@ pub struct RefundListParams<'a> {
 pub struct Refund {
     pub id: Identifier,
     pub amount: u64,
-    pub balance_transaction: Identifier,
+    pub balance_transaction: Option<Identifier>,
     pub charge: Identifier,
     pub created: Timestamp,
     pub currency: Currency,
