@@ -53,6 +53,7 @@ impl ClientBuilder {
     }
 }
 
+#[derive(Debug, Clone)]
 pub struct Client {
     inner: ReqwestClient,
     base_url: Url,
