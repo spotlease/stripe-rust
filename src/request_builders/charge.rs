@@ -16,7 +16,7 @@ impl ChargeRB {
     pub fn capture<'a>(mut self) -> SimpleRequest<Charge> {
         
         self.0.push_str("/capture");
-        Request::new(Method::Post, self.0)
+        Request::new(Method::POST, self.0)
     }
 }
 

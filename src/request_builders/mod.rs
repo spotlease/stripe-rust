@@ -34,13 +34,13 @@ where
     IRB: ResxInstanceRB,
 {
     fn list_all(self) -> SimpleRequest<List<M>> {
-        Request::new(Method::Get, self.path())
+        Request::new(Method::GET, self.path())
     }
     fn list(self, params: &LP) -> RequestWithQuery<&LP, List<M>> {
-        Request::new_with_query(Method::Get, self.path(), params)
+        Request::new_with_query(Method::GET, self.path(), params)
     }
     fn create(self, params: &CP) -> RequestWithBody<&CP, M> {
-        Request::new_with_body(Method::Post, self.path(), params)
+        Request::new_with_body(Method::POST, self.path(), params)
     }
     fn with_id<I: AsRef<str>>(self, id: I) -> IRB {
         let mut path = self.path();
@@ -56,13 +56,13 @@ where
     UP: Serialize,
 {
     fn retrieve(self) -> SimpleRequest<M> {
-        Request::new(Method::Get, self.path())
+        Request::new(Method::GET, self.path())
     }
     fn update(self, params: &UP) -> RequestWithBody<&UP, M> {
-        Request::new_with_body(Method::Post, self.path(), params)
+        Request::new_with_body(Method::POST, self.path(), params)
     }
     fn delete(self) -> SimpleRequest<Deleted> {
-        Request::new(Method::Delete, self.path())
+        Request::new(Method::DELETE, self.path())
     }
 }
 

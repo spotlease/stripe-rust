@@ -16,11 +16,11 @@ pub struct AccountRB(String);
 impl AccountRB {
     pub fn reject(mut self) -> SimpleRequest<Account> {
         self.0.push_str("/reject");
-        Request::new(Method::Post, self.0)
+        Request::new(Method::POST, self.0)
     }
     pub fn create_login_link(mut self) -> SimpleRequest<Account> {
         self.0.push_str("/login_links");
-        Request::new(Method::Post, self.0)
+        Request::new(Method::POST, self.0)
     }
     resource!(external_account, ExternalAccountsRB);
 }

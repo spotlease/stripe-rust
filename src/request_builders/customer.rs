@@ -21,14 +21,14 @@ impl CustomerRB {
     pub fn attach_source<'a>(mut self, source_id: &str) -> RequestWithBody<AttachSourceBody, Source> {
         
         self.0.push_str("/sources");
-        Request::new_with_body(Method::Post, self.0, AttachSourceBody {
+        Request::new_with_body(Method::POST, self.0, AttachSourceBody {
             source: source_id
         })
     }
     pub fn detach_source<'a>(mut self, source_id: &str) -> SimpleRequest<Source> {
         self.0.push_str("/sources/");
         self.0.push_str(source_id);
-        Request::new(Method::Delete, self.0)
+        Request::new(Method::DELETE, self.0)
     }
 }
 

@@ -1,5 +1,5 @@
 use reqwest::Method;
-use reqwest::header::{Headers};
+use reqwest::header::{HeaderMap, HeaderValue};
 use serde::de::DeserializeOwned;
 use serde::ser::Serialize;
 use std::marker::PhantomData;
@@ -47,15 +47,15 @@ impl<Q: Serialize, B: Serialize, R: DeserializeOwned> Request<Q, B, R> {
         client.execute(self)
     }
     pub fn send_on_behalf_of(self, client: &Client, behalf_of: &str) -> StripeResult<R> {
-        let mut headers = Headers::new();
-        headers.set_raw("Stripe-Account", behalf_of);
+        let mut headers = HeaderMap::new();
+        headers.insert("Stripe-Account", HeaderValue::from_str(behalf_of).unwrap()); //TODO: avoid unwrap
         let options = RequestOptions { headers };
         client.execute_with_options(self, options)
     }
 }
 
 pub struct RequestOptions {
-    pub headers: Headers
+    pub headers: HeaderMap
 }
 
 pub type SimpleRequest<R> = Request<(), (), R>;

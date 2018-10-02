@@ -8,7 +8,7 @@ use error::Error as StripeError;
 use error::RequestError as StripeRequestError;
 use request::{Request, RequestOptions};
 use reqwest;
-use reqwest::header::Headers;
+use reqwest::header::{HeaderMap, HeaderValue};
 
 const DEFAULT_API_URL: &'static str = "https://api.stripe.com/v1/";
 
@@ -19,18 +19,17 @@ pub struct ClientBuilder {
 }
 
 impl ClientBuilder {
-    pub fn new<IntoString: Into<String>>(secret_key: IntoString) -> Self {
-        use reqwest::header::{Authorization, Basic, ContentType};
+    pub fn new<AsStr: AsRef<str>>(secret_key: AsStr) -> Self {
+        use reqwest::header::{AUTHORIZATION, CONTENT_TYPE};
+        use base64::encode;
 
-        let mut default_headers = Headers::new();
-        default_headers.set(Authorization(Basic {
-            username: secret_key.into(),
-            password: None,
-        }));
-        default_headers.set(ContentType::form_url_encoded());
+        let authorization_value = format!("Basic {}:", encode(secret_key.as_ref()));
 
-        let mut reqwest_client_builder = ReqwestClient::builder();
-        reqwest_client_builder.default_headers(default_headers);
+        let mut default_headers = HeaderMap::new();
+        default_headers.insert(AUTHORIZATION, HeaderValue::from_str(&authorization_value).unwrap()); //TODO: avoid unwrap
+        default_headers.insert(CONTENT_TYPE, HeaderValue::from_static("application/x-www-form-urlencoded"));
+
+        let reqwest_client_builder = ReqwestClient::builder().default_headers(default_headers);
 
         Self {
             inner: reqwest_client_builder,
@@ -45,7 +44,7 @@ impl ClientBuilder {
         self.timeout = timeout.into();
         self
     }
-    pub fn build(mut self) -> StripeResult<Client> {
+    pub fn build(self) -> StripeResult<Client> {
         Ok(Client {
             base_url: Url::parse(&self.base_url)?,
             inner: self.inner.build()?,
@@ -60,11 +59,11 @@ pub struct Client {
 }
 
 impl Client {
-    pub fn builder<IntoString: Into<String>>(secret_key: IntoString) -> ClientBuilder {
+    pub fn builder<AsStr: AsRef<str>>(secret_key: AsStr) -> ClientBuilder {
         ClientBuilder::new(secret_key)
     }
     pub fn execute<Q: Serialize, B: Serialize, R: DeserializeOwned>(&self, request: Request<Q, B, R>) -> StripeResult<R> {
-        let headers = Headers::new();
+        let headers = HeaderMap::new();
         let options = RequestOptions { headers };
         self.execute_with_options(request, options)
     }
@@ -73,14 +72,14 @@ impl Client {
         let mut reqwest_request_builder = self.inner.request(request.method, self.base_url.join(&request.path[1..])?);
 
         if let Some(ref request_query) = request.query {
-            reqwest_request_builder.query(request_query);
+            reqwest_request_builder = reqwest_request_builder.query(request_query);
         }
 
         if let Some(ref request_body) = request.body {
-            reqwest_request_builder.form(request_body);
+            reqwest_request_builder = reqwest_request_builder.form(request_body);
         }
 
-        reqwest_request_builder.headers(options.headers);
+        reqwest_request_builder = reqwest_request_builder.headers(options.headers);
 
         let reqwest_request = reqwest_request_builder.build()?;
 
