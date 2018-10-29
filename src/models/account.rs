@@ -62,7 +62,8 @@ pub struct Account {
     pub payouts_enabled: bool,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub product_description: Option<String>,
-    pub statement_descriptor: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub statement_descriptor: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub support_email: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]

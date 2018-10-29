@@ -12,6 +12,7 @@ impl<'a> super::StripeResourceRB<ChargeListParams<'a>, ChargeCreateParams<'a>, C
 #[derive(ResxPath, ResxInstanceRB)]
 pub struct ChargeRB(String);
 
+//TODO: prevent empty charge ID, or any other ID
 impl ChargeRB {
     pub fn capture<'a>(mut self) -> SimpleRequest<Charge> {
         
