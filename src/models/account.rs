@@ -103,10 +103,12 @@ impl Default for AccountType {
     }
 }
 
-#[derive(Debug, Serialize)]
+#[derive(Debug, Default, Serialize)]
 pub struct AccountUpdateParams<'a> {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub business_url: NullableOption<&'a str>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub tos_acceptance: Option<TOSAcceptanceDetails>,
 }
 
 #[derive(Default, Serialize)]

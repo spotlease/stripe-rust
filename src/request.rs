@@ -7,6 +7,7 @@ use std::marker::PhantomData;
 use client::Client;
 use models::Result as StripeResult;
 
+#[derive(Debug)]
 pub struct Request<Q: Serialize, B: Serialize, R: DeserializeOwned> {
     pub method: Method,
     pub path: String,
