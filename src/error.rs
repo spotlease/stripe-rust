@@ -3,6 +3,7 @@ use std::fmt;
 use std::io;
 use reqwest;
 use serde_json;
+use serde_qs;
 
 /// An error encountered when communicating with the Stripe API.
 #[derive(Debug)]
@@ -11,6 +12,8 @@ pub enum Error {
     Stripe(RequestError),
     /// A networking error communicating with the Stripe server.
     Http(reqwest::Error),
+    /// Error serializing form body.
+    FormSerialization(serde_qs::Error),
     //TODO: doc
     Url(reqwest::UrlError),
     /// An error reading the response body.
@@ -25,6 +28,7 @@ impl fmt::Display for Error {
         match *self {
             Error::Stripe(ref err) => write!(f, ": {}", err),
             Error::Http(ref err) => write!(f, ": {}", err),
+            Error::FormSerialization(ref err) => write!(f, ": {}", err),
             Error::Url(ref err) => write!(f, ": {}", err),
             Error::Io(ref err) => write!(f, ": {}", err),
             Error::Conversion(ref err) => write!(f, ": {}", err),
@@ -37,6 +41,7 @@ impl error::Error for Error {
         match *self {
             Error::Stripe(_) => "error reported by stripe",
             Error::Http(_) => "error communicating with stripe",
+            Error::FormSerialization(_) => "error serializing form body",
             Error::Url(_) => "error parsing url",
             Error::Io(_) => "error reading response from stripe",
             Error::Conversion(_) => "error converting between wire format and Rust types",
@@ -47,6 +52,7 @@ impl error::Error for Error {
         match *self {
             Error::Stripe(ref err) => Some(err),
             Error::Http(ref err) => Some(err),
+            Error::FormSerialization(ref err) => Some(err),
             Error::Url(ref err) => Some(err),
             Error::Io(ref err) => Some(err),
             Error::Conversion(ref err) => Some(&**err),
@@ -63,6 +69,12 @@ impl From<RequestError> for Error {
 impl From<reqwest::Error> for Error {
     fn from(err: reqwest::Error) -> Error {
         Error::Http(err)
+    }
+}
+
+impl From<serde_qs::Error> for Error {
+    fn from(err: serde_qs::Error) -> Error {
+        Error::FormSerialization(err)
     }
 }
 
