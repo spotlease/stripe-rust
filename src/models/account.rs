@@ -1,5 +1,5 @@
 use super::{Metadata, NullableOption};
-use models::Timestamp;
+use models::{Address, Timestamp};
 
 #[derive(Debug, Default, Deserialize, Serialize)]
 pub struct DeclineChargeSettings {
@@ -29,6 +29,39 @@ pub struct TOSAcceptanceDetails {
     pub user_agent: Option<String>,
 }
 
+#[derive(Debug, Deserialize, Serialize)]
+#[serde(rename_all = "snake_case")]
+pub enum LegalEntityType {
+    Individual,
+    Company
+}
+
+#[derive(Debug, Deserialize, Serialize)]
+pub struct DateOfBirth {
+    year: Option<u64>,
+    month: Option<u64>,
+    day: Option<u64>
+}
+
+#[derive(Debug, Default, Deserialize, Serialize)]
+pub struct LegalEntity {
+    #[serde(rename = "type")]
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub entity_type: Option<LegalEntityType>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub address: Option<Address>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub dob: Option<DateOfBirth>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub first_name: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub last_name: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub phone_number: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub ssn_last_4: Option<String>,
+}
+
 #[derive(Debug, Deserialize)]
 pub struct Account {
     pub id: String,
@@ -52,8 +85,8 @@ pub struct Account {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub email: Option<String>,
     // pub external_accounts: List<BankAccount>,
-    // #[serde(skip_serializing_if = "Option::is_none")]
-    // pub legal_entity: Option<json::Value>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub legal_entity: Option<LegalEntity>,
     pub metadata: Metadata,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub payout_schedule: Option<PayoutSchedule>,
@@ -73,22 +106,24 @@ pub struct Account {
     pub tos_acceptance: Option<TOSAcceptanceDetails>,
     #[serde(rename = "type")]
     pub account_type: String, // (Stripe, Custom, or Express)
-    // #[serde(skip_serializing_if = "Option::is_none")]
-    // pub verification: Option<json::Value>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub verification: Option<serde_json::Value>,
 }
 
-/// The set of parameters that can be used when creating an account for users.
-///
-/// For more details see https://stripe.com/docs/api#create_account.
 #[derive(Debug, Default, Serialize)]
-pub struct AccountCreateParams<'a> {
+pub struct AccountParams<'a> {
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub country: Option<&'a str>,
+    pub account_token: Option<&'a str>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub email: Option<&'a str>,
-    #[serde(rename = "type")]
-    pub account_type: AccountType
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub business_url: NullableOption<&'a str>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub legal_entity: Option<LegalEntity>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub tos_acceptance: Option<TOSAcceptanceDetails>,
 }
+
 
 #[derive(Debug, Serialize)]
 #[serde(rename_all = "snake_case")]
@@ -103,12 +138,24 @@ impl Default for AccountType {
     }
 }
 
+/// The set of parameters that can be used when creating an account for users.
+///
+/// For more details see https://stripe.com/docs/api#create_account.
+#[derive(Debug, Default, Serialize)]
+pub struct AccountCreateParams<'a> {
+    #[serde(rename = "type")]
+    pub account_type: AccountType,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub country: Option<&'a str>,
+    #[serde(flatten)]
+    pub account: AccountParams<'a>,
+    
+}
+
 #[derive(Debug, Default, Serialize)]
 pub struct AccountUpdateParams<'a> {
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub business_url: NullableOption<&'a str>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub tos_acceptance: Option<TOSAcceptanceDetails>,
+    #[serde(flatten)]
+    pub account: AccountParams<'a>,
 }
 
 #[derive(Default, Serialize)]
