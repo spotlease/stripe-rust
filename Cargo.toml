@@ -11,6 +11,7 @@ serde_qs = "0.4"
 libc = "*"
 base64 = "0.9"
 reqwest = "0.9"
+failure = "0.1"
 
 [dependencies.resx]
 git = "https://github.com/spotlease/resx"
@@ -19,6 +20,3 @@ rev = "1cbe61f60ddb1fddd9b7fa8a0f9b7133cebc1567"
 [dependencies.resx_derives]
 git = "https://github.com/spotlease/resx"
 rev = "1cbe61f60ddb1fddd9b7fa8a0f9b7133cebc1567"
-
-[replace]
-"backtrace:0.3.11" = { git = "https://github.com/alexcrichton/backtrace-rs", rev = "1ff8f06f8927a36c7a90dcd1ac21a18869059bcf" }

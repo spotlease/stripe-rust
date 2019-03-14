@@ -1,63 +1,30 @@
-use std::error;
-use std::fmt;
 use std::io;
 use reqwest;
 use serde_json;
 use serde_qs;
+use failure::{Fail, SyncFailure};
 
 /// An error encountered when communicating with the Stripe API.
-#[derive(Debug)]
+#[derive(Debug, Fail)]
 pub enum Error {
     /// An error reported by Stripe.
+    #[fail(display = "error reported by stripe")]
     Stripe(RequestError),
     /// A networking error communicating with the Stripe server.
-    Http(reqwest::Error),
+    #[fail(display = "error communicating with stripe")]
+    Http(#[cause] reqwest::Error),
     /// Error serializing form body.
-    FormSerialization(serde_qs::Error),
+    #[fail(display = "error serializing form body")]
+    FormSerialization(#[cause] failure::Error),
     //TODO: doc
-    Url(reqwest::UrlError),
+    #[fail(display = "error parsing url")]
+    Url(#[cause] reqwest::UrlError),
     /// An error reading the response body.
-    Io(io::Error),
+    #[fail(display = "error reading response from stripe")]
+    Io(#[cause] io::Error),
     /// An error converting between wire format and Rust types.
-    Conversion(Box<error::Error + Send>),
-}
-
-impl fmt::Display for Error {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        f.write_str(error::Error::description(self))?;
-        match *self {
-            Error::Stripe(ref err) => write!(f, ": {}", err),
-            Error::Http(ref err) => write!(f, ": {}", err),
-            Error::FormSerialization(ref err) => write!(f, ": {}", err),
-            Error::Url(ref err) => write!(f, ": {}", err),
-            Error::Io(ref err) => write!(f, ": {}", err),
-            Error::Conversion(ref err) => write!(f, ": {}", err),
-        }
-    }
-}
-
-impl error::Error for Error {
-    fn description(&self) -> &str {
-        match *self {
-            Error::Stripe(_) => "error reported by stripe",
-            Error::Http(_) => "error communicating with stripe",
-            Error::FormSerialization(_) => "error serializing form body",
-            Error::Url(_) => "error parsing url",
-            Error::Io(_) => "error reading response from stripe",
-            Error::Conversion(_) => "error converting between wire format and Rust types",
-        }
-    }
-
-    fn cause(&self) -> Option<&error::Error> {
-        match *self {
-            Error::Stripe(ref err) => Some(err),
-            Error::Http(ref err) => Some(err),
-            Error::FormSerialization(ref err) => Some(err),
-            Error::Url(ref err) => Some(err),
-            Error::Io(ref err) => Some(err),
-            Error::Conversion(ref err) => Some(&**err),
-        }
-    }
+    #[fail(display = "error converting between wire format and Rust types")]
+    Conversion(#[cause] failure::Error),
 }
 
 impl From<RequestError> for Error {
@@ -74,7 +41,7 @@ impl From<reqwest::Error> for Error {
 
 impl From<serde_qs::Error> for Error {
     fn from(err: serde_qs::Error) -> Error {
-        Error::FormSerialization(err)
+        Error::FormSerialization(SyncFailure::new(err).into())
     }
 }
 
@@ -92,7 +59,7 @@ impl From<io::Error> for Error {
 
 impl From<serde_json::Error> for Error {
     fn from(err: serde_json::Error) -> Error {
-        Error::Conversion(Box::new(err))
+        Error::Conversion(SyncFailure::new(err).into())
     }
 }
 
@@ -163,22 +130,4 @@ pub struct RequestError {
 
     /// The ID of the failed charge, if applicable.
     pub charge: Option<String>,
-}
-
-impl fmt::Display for RequestError {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{:?}({})", self.error_type, self.http_status)?;
-        if let Some(ref message) = self.message {
-            write!(f, ": {}", message)?;
-        }
-        Ok(())
-    }
-}
-
-impl error::Error for RequestError {
-    fn description(&self) -> &str {
-        self.message.as_ref().map(|s| s.as_str()).unwrap_or(
-            "request error",
-        )
-    }
 }

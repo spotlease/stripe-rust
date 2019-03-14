@@ -6,6 +6,7 @@ extern crate base64;
 extern crate reqwest;
 extern crate resx;
 #[macro_use] extern crate resx_derives;
+extern crate failure;
 
 mod client;
 mod models;
