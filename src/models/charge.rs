@@ -205,5 +205,6 @@ pub struct Charge {
     pub source_transfer: Option<String>,
     pub statement_descriptor: Option<String>,
     pub status: String, // (succeeded, pending, failed)
+    pub transfer: Option<String>,
     pub transfer_group: Option<String>,
 }
