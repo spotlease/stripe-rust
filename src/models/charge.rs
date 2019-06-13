@@ -167,6 +167,20 @@ pub struct ChargeListParams<'a> {
     pub transfer_group: Option<&'a str>,
 }
 
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum PaymentMethodDetails {
+    Card {
+        brand: String,
+        country: String,
+        exp_month: u32,
+        exp_year: u32,
+        fingerprint: String,
+        funding: String,
+        last4: String,
+    }
+}
+
 /// The resource representing a Stripe charge.
 ///
 /// For more details see https://stripe.com/docs/api#charges.
@@ -196,6 +210,7 @@ pub struct Charge {
     pub order: Option<String>,
     pub outcome: Option<ChargeOutcome>,
     pub paid: bool,
+    pub payment_method_details: Option<PaymentMethodDetails>,
     pub receipt_email: Option<String>,
     pub receipt_number: Option<String>,
     pub refunded: bool,
