@@ -168,7 +168,7 @@ pub struct ChargeListParams<'a> {
 }
 
 #[derive(Debug, Deserialize)]
-#[serde(rename_all = "snake_case")]
+#[serde(rename_all = "lowercase")]
 pub enum PaymentMethodDetails {
     Card {
         brand: String,
@@ -210,7 +210,7 @@ pub struct Charge {
     pub order: Option<String>,
     pub outcome: Option<ChargeOutcome>,
     pub paid: bool,
-    pub payment_method_details: Option<PaymentMethodDetails>,
+    // pub payment_method_details: Option<PaymentMethodDetails>,
     pub receipt_email: Option<String>,
     pub receipt_number: Option<String>,
     pub refunded: bool,
