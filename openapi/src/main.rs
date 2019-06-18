@@ -183,21 +183,21 @@ fn main() {
 
     // Renames for `account` params
     schema_renames.extend(vec![
-        ("create_account_company", "company_params"),
-        ("update_account_company", "company_params"),
-        ("create_account_individual", "person_params"),
-        ("update_account_individual", "person_params"),
-        ("create_account_requested_capabilities", "requested_capability"),
-        ("update_account_requested_capabilities", "requested_capability"),
-        ("create_account_settings", "account_settings_params"),
-        ("update_account_settings", "account_settings_params"),
+        ("account_create_params_company", "company_params"),
+        ("account_update_params_company", "company_params"),
+        ("account_create_params_individual", "person_params"),
+        ("account_update_params_individual", "person_params"),
+        ("account_create_params_requested_capabilities", "requested_capability"),
+        ("account_update_params_requested_capabilities", "requested_capability"),
+        ("account_create_params_settings", "account_settings_params"),
+        ("account_update_params_settings", "account_settings_params"),
         ("account_settings_params_branding", "branding_settings_params"),
         ("account_settings_params_card_payments", "card_payments_settings_params"),
         ("account_settings_params_payments", "payments_settings_params"),
         ("account_settings_params_dashboard_settings", "dashboard_settings_params"),
         ("account_settings_params_payouts", "payout_settings_params"),
-        ("create_account_tos_acceptance", "accept_tos"),
-        ("update_account_tos_acceptance", "accept_tos"),
+        ("account_create_params_tos_acceptance", "accept_tos"),
+        ("account_update_params_tos_acceptance", "accept_tos"),
         ("card_payments_settings_params_decline_on", "decline_charge_on_params"),
         ("payout_settings_params_schedule", "transfer_schedule_params"),
         ("person_params_verification", "person_verification_params"),
@@ -205,8 +205,8 @@ fn main() {
         ("transfer_schedule_params_interval", "transfer_schedule_interval"),
     ]);
     field_overrides.extend(vec![
-        (("create_account", "business_profile"), ("BusinessProfile", "Option<BusinessProfile>")),
-        (("update_account", "business_profile"), ("BusinessProfile", "Option<BusinessProfile>")),
+        (("account_create_params", "business_profile"), ("BusinessProfile", "Option<BusinessProfile>")),
+        (("account_update_params", "business_profile"), ("BusinessProfile", "Option<BusinessProfile>")),
         (("company_params", "address"), ("Address", "Option<Address>")),
         (("company_params", "address_kana"), ("Address", "Option<Address>")),
         (("company_params", "address_kanji"), ("Address", "Option<Address>")),
@@ -237,28 +237,28 @@ fn main() {
     // Renames for `customer` params
     schema_renames.extend(vec![
         ("create_customer_invoice_settings", "customer_invoice_settings"),
-        ("update_customer_invoice_settings", "customer_invoice_settings"),
+        ("customer_update_params_invoice_settings", "customer_invoice_settings"),
         ("create_customer_tax_id_data", "tax_id_data"),
         ("create_customer_tax_info", "tax_info_params"),
-        ("update_customer_tax_info", "tax_info_params"),
+        ("customer_update_params_tax_info", "tax_info_params"),
         ("tax_info_params_type", "tax_info_type"),
     ]);
     field_overrides.extend(vec![
         (("create_customer", "address"), ("Address", "Option<Address>")),
-        (("update_customer", "address"), ("Address", "Option<Address>")),
+        (("customer_update_params", "address"), ("Address", "Option<Address>")),
         (
-            ("update_customer", "default_alipay_account"),
+            ("customer_update_params", "default_alipay_account"),
             ("AlipayAccountId", "Option<AlipayAccountId>"),
         ),
-        (("update_customer", "default_bank_account"), ("BankAccountId", "Option<BankAccountId>")),
-        (("update_customer", "default_card"), ("CardId", "Option<CardId>")),
+        (("customer_update_params", "default_bank_account"), ("BankAccountId", "Option<BankAccountId>")),
+        (("customer_update_params", "default_card"), ("CardId", "Option<CardId>")),
         (("create_customer", "default_source"), ("PaymentSourceId", "Option<PaymentSourceId>")),
-        (("update_customer", "default_source"), ("PaymentSourceId", "Option<PaymentSourceId>")),
+        (("customer_update_params", "default_source"), ("PaymentSourceId", "Option<PaymentSourceId>")),
         (("create_customer", "shipping"), ("ShippingParams", "Option<ShippingParams>")),
-        (("update_customer", "shipping"), ("ShippingParams", "Option<ShippingParams>")),
+        (("customer_update_params", "shipping"), ("ShippingParams", "Option<ShippingParams>")),
         (("create_customer", "source"), ("PaymentSourceParams", "Option<PaymentSourceParams<'a>>")),
-        (("update_customer", "source"), ("PaymentSourceParams", "Option<PaymentSourceParams<'a>>")),
-        (("update_customer", "trial_end"), ("Scheduled", "Option<Scheduled>")),
+        (("customer_update_params", "source"), ("PaymentSourceParams", "Option<PaymentSourceParams<'a>>")),
+        (("customer_update_params", "trial_end"), ("Scheduled", "Option<Scheduled>")),
         (
             ("customer_invoice_settings", "custom_fields"),
             ("CustomField", "Option<Vec<CustomField>>"),
@@ -266,7 +266,7 @@ fn main() {
     ]);
     // Renames for `invoice` params
     field_overrides.extend(vec![(
-        ("create_invoice", "custom_fields"),
+        ("invoice_create_params", "custom_fields"),
         ("CustomField", "Option<Vec<CustomField>>"),
     )]);
 
@@ -326,39 +326,39 @@ fn main() {
     // Renames for `subscription` params
     field_overrides.extend(vec![
         (
-            ("create_subscription", "billing_thresholds"),
+            ("subscription_create_params", "billing_thresholds"),
             ("SubscriptionBillingThresholds", "Option<SubscriptionBillingThresholds>"),
         ),
         (
-            ("update_subscription", "billing_thresholds"),
+            ("subscription_update_params", "billing_thresholds"),
             ("SubscriptionBillingThresholds", "Option<SubscriptionBillingThresholds>"),
         ),
         (
-            ("create_subscription_items", "billing_thresholds"),
+            ("subscription_create_params_items", "billing_thresholds"),
             ("SubscriptionItemBillingThresholds", "Option<SubscriptionItemBillingThresholds>"),
         ),
         (
-            ("update_subscription_item", "billing_thresholds"),
+            ("subscription_update_params_item", "billing_thresholds"),
             ("SubscriptionItemBillingThresholds", "Option<SubscriptionItemBillingThresholds>"),
         ),
         (
-            ("update_subscription_items", "billing_thresholds"),
+            ("subscription_update_params_items", "billing_thresholds"),
             ("SubscriptionItemBillingThresholds", "Option<SubscriptionItemBillingThresholds>"),
         ),
-        (("create_subscription", "trial_end"), ("Scheduled", "Option<Scheduled>")),
-        (("update_subscription", "trial_end"), ("Scheduled", "Option<Scheduled>")),
+        (("subscription_create_params", "trial_end"), ("Scheduled", "Option<Scheduled>")),
+        (("subscription_update_params", "trial_end"), ("Scheduled", "Option<Scheduled>")),
     ]);
 
     // Renames for `subscription_schedule` params
     field_overrides.extend(vec![
-        (("create_subscription_schedule", "start_date"), ("Scheduled", "Option<Scheduled>")),
-        (("update_subscription_schedule", "start_date"), ("Scheduled", "Option<Scheduled>")),
-        (("create_subscription_schedule_phases", "start_date"), ("Scheduled", "Option<Scheduled>")),
-        (("update_subscription_schedule_phases", "start_date"), ("Scheduled", "Option<Scheduled>")),
-        (("create_subscription_schedule_phases", "end_date"), ("Scheduled", "Option<Scheduled>")),
-        (("update_subscription_schedule_phases", "end_date"), ("Scheduled", "Option<Scheduled>")),
-        (("create_subscription_schedule_phases", "trial_end"), ("Scheduled", "Option<Scheduled>")),
-        (("update_subscription_schedule_phases", "trial_end"), ("Scheduled", "Option<Scheduled>")),
+        (("subscription_schedule_create_params", "start_date"), ("Scheduled", "Option<Scheduled>")),
+        (("subscription_schedule_update_params", "start_date"), ("Scheduled", "Option<Scheduled>")),
+        (("subscription_schedule_create_params_phases", "start_date"), ("Scheduled", "Option<Scheduled>")),
+        (("subscription_schedule_update_params_phases", "start_date"), ("Scheduled", "Option<Scheduled>")),
+        (("subscription_schedule_create_params_phases", "end_date"), ("Scheduled", "Option<Scheduled>")),
+        (("subscription_schedule_update_params_phases", "end_date"), ("Scheduled", "Option<Scheduled>")),
+        (("subscription_schedule_create_params_phases", "trial_end"), ("Scheduled", "Option<Scheduled>")),
+        (("subscription_schedule_update_params_phases", "trial_end"), ("Scheduled", "Option<Scheduled>")),
     ]);
 
     // Renames for misc
@@ -378,8 +378,8 @@ fn main() {
         ("update_product", "package_dimensions"),
         ("PackageDimensions", "Option<PackageDimensions>"),
     );
-    field_overrides.insert(("create_plan_tiers", "up_to"), ("UpTo", "Option<UpTo>"));
-    field_overrides.insert(("update_file_link", "expires_at"), ("Scheduled", "Option<Scheduled>"));
+    field_overrides.insert(("plan_create_params_tiers", "up_to"), ("UpTo", "Option<UpTo>"));
+    field_overrides.insert(("file_link_update_params", "expires_at"), ("Scheduled", "Option<Scheduled>"));
     field_overrides.insert(
         ("create_token_account", "business_type"),
         ("BusinessType", "Option<BusinessType>"),
@@ -1039,39 +1039,6 @@ fn gen_impl_object(meta: &Metadata, object: &str) -> String {
             }
         }
         out.push_str("}\n");
-        out.push('\n');
-        out.push_str("impl<'a> ");
-        out.push_str(&params.rust_type);
-        out.push_str("<'a> {\n");
-        out.push_str("    pub fn new(");
-        let mut required_count = 0;
-        for (name, type_, required) in &initializers {
-            if *required {
-                if required_count > 0 {
-                    out.push_str(", ");
-                }
-                out.push_str(&name);
-                out.push_str(": ");
-                out.push_str(&type_);
-                required_count += 1;
-            }
-        }
-        out.push_str(") -> Self {\n");
-        out.push_str("        ");
-        out.push_str(&params.rust_type);
-        out.push_str(" {\n");
-        for (name, _, required) in &initializers {
-            out.push_str("            ");
-            out.push_str(&name);
-            if *required {
-                out.push_str(",\n");
-            } else {
-                out.push_str(": Default::default(),\n");
-            }
-        }
-        out.push_str("        }\n");
-        out.push_str("    }\n");
-        out.push_str("}\n");
     }
 
     let mut emitted_structs = BTreeSet::new();
@@ -1584,11 +1551,7 @@ fn gen_impl_requests(
             let doc_comment = get_request["description"].as_str().unwrap_or_default();
             if ok_schema["properties"]["object"]["enum"][0].as_str() == Some("list") {
                 if segments.len() == 1 {
-                    let params_name = if rust_struct.ends_with("y") {
-                        format!("List{}ies", &rust_struct[0..rust_struct.len() - 1])
-                    } else {
-                        format!("List{}s", rust_struct)
-                    };
+                    let params_name = format!("{}ListParams", rust_struct);
                     let params = InferredParams {
                         method: "list".into(),
                         rust_type: params_name.clone(),
@@ -1699,7 +1662,7 @@ fn gen_impl_requests(
                         "style": "deepObject"
                     }));
                 }
-                let params_name = format!("Create{}", rust_struct);
+                let params_name = format!("{}CreateParams", rust_struct);
                 let params = InferredParams {
                     method: "create".into(),
                     rust_type: params_name.clone(),
@@ -1755,7 +1718,7 @@ fn gen_impl_requests(
                         "style": "deepObject"
                     }));
                 }
-                let params_name = format!("Update{}", rust_struct);
+                let params_name = format!("{}UpdateParams", rust_struct);
                 let params = InferredParams {
                     method: "update".into(),
                     rust_type: params_name.clone(),

@@ -1,0 +1,219 @@
+// ======================================
+// This file was automatically generated.
+// ======================================
+
+use crate::ids::RecipientId;
+use crate::params::{Deleted, Expand, Expandable, List, Metadata, Object, RangeQuery, Timestamp};
+use crate::resources::{Account, BankAccount, Card};
+use serde_derive::{Deserialize, Serialize};
+
+/// The resource representing a Stripe "TransferRecipient".
+#[derive(Clone, Debug, Deserialize, Serialize)]
+pub struct Recipient {
+    /// Unique identifier for the object.
+    pub id: RecipientId,
+
+    /// Hash describing the current account on the recipient, if there is one.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub active_account: Option<BankAccount>,
+
+    #[serde(default)]
+    pub cards: List<Card>,
+
+    /// Time at which the object was created.
+    ///
+    /// Measured in seconds since the Unix epoch.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub created: Option<Timestamp>,
+
+    /// The default card to use for creating transfers to this recipient.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub default_card: Option<Expandable<Card>>,
+
+    // Always true for a deleted object
+    #[serde(default)]
+    pub deleted: bool,
+
+    /// An arbitrary string attached to the object.
+    ///
+    /// Often useful for displaying to users.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub description: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub email: Option<String>,
+
+    /// Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.
+    #[serde(default)]
+    pub livemode: bool,
+
+    /// Set of key-value pairs that you can attach to an object.
+    ///
+    /// This can be useful for storing additional information about the object in a structured format.
+    #[serde(default)]
+    pub metadata: Metadata,
+
+    /// The ID of the [Custom account](https://stripe.com/docs/connect/custom-accounts) this recipient was migrated to.
+    ///
+    /// If set, the recipient can no longer be updated, nor can transfers be made to it: use the Custom account instead.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub migrated_to: Option<Expandable<Account>>,
+
+    /// Full, legal name of the recipient.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub name: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub rolled_back_from: Option<Expandable<Account>>,
+
+    /// Type of the recipient, one of `individual` or `corporation`.
+    #[serde(rename = "type")]
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub type_: Option<RecipientType>,
+}
+
+impl Object for Recipient {
+    type Id = RecipientId;
+    fn id(&self) -> Self::Id {
+        self.id.clone()
+    }
+    fn object(&self) -> &'static str {
+        "recipient"
+    }
+}
+
+/// The parameters for `Recipient::create`.
+#[derive(Clone, Debug, Serialize)]
+pub struct RecipientCreateParams<'a> {
+    /// An arbitrary string which you can attach to a `Recipient` object.
+    ///
+    /// It is displayed alongside the recipient in the web interface.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub description: Option<&'a str>,
+
+    /// The recipient's email address.
+    ///
+    /// It is displayed alongside the recipient in the web interface, and can be useful for searching and tracking.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub email: Option<&'a str>,
+
+    /// Specifies which fields in the response should be expanded.
+    #[serde(skip_serializing_if = "Expand::is_empty")]
+    pub expand: &'a [&'a str],
+
+    /// Set of key-value pairs that you can attach to an object.
+    ///
+    /// This can be useful for storing additional information about the object in a structured format.
+    /// Individual keys can be unset by posting an empty value to them.
+    /// All keys can be unset by posting an empty value to `metadata`.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub metadata: Option<Metadata>,
+
+    /// The recipient's full, legal name.
+    ///
+    /// For type `individual`, should be in the format `First Last`, `First Middle Last`, or `First M Last` (no prefixes or suffixes).
+    /// For `corporation`, the full, incorporated name.
+    pub name: &'a str,
+
+    /// The recipient's tax ID, as a string.
+    ///
+    /// For type `individual`, the full SSN; for type `corporation`, the full EIN.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub tax_id: Option<&'a str>,
+
+    /// Type of the recipient: either `individual` or `corporation`.
+    #[serde(rename = "type")]
+    pub type_: RecipientType,
+}
+
+/// The parameters for `Recipient::list`.
+#[derive(Clone, Debug, Serialize)]
+pub struct RecipientListParams<'a> {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub created: Option<RangeQuery<Timestamp>>,
+
+    /// A cursor for use in pagination.
+    ///
+    /// `ending_before` is an object ID that defines your place in the list.
+    /// For instance, if you make a list request and receive 100 objects, starting with `obj_bar`, your subsequent call can include `ending_before=obj_bar` in order to fetch the previous page of the list.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub ending_before: Option<RecipientId>,
+
+    /// Specifies which fields in the response should be expanded.
+    #[serde(skip_serializing_if = "Expand::is_empty")]
+    pub expand: &'a [&'a str],
+
+    /// A limit on the number of objects to be returned.
+    ///
+    /// Limit can range between 1 and 100, and the default is 10.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub limit: Option<u64>,
+
+    /// A cursor for use in pagination.
+    ///
+    /// `starting_after` is an object ID that defines your place in the list.
+    /// For instance, if you make a list request and receive 100 objects, ending with `obj_foo`, your subsequent call can include `starting_after=obj_foo` in order to fetch the next page of the list.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub starting_after: Option<RecipientId>,
+
+    #[serde(rename = "type")]
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub type_: Option<RecipientType>,
+
+    /// Only return recipients that are verified or unverified.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub verified: Option<bool>,
+}
+
+/// The parameters for `Recipient::update`.
+#[derive(Clone, Debug, Serialize)]
+pub struct RecipientUpdateParams<'a> {
+    /// ID of the card to set as the recipient's new default for payouts.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub default_card: Option<&'a str>,
+
+    /// An arbitrary string which you can attach to a `Recipient` object.
+    ///
+    /// It is displayed alongside the recipient in the web interface.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub description: Option<&'a str>,
+
+    /// The recipient's email address.
+    ///
+    /// It is displayed alongside the recipient in the web interface, and can be useful for searching and tracking.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub email: Option<&'a str>,
+
+    /// Specifies which fields in the response should be expanded.
+    #[serde(skip_serializing_if = "Expand::is_empty")]
+    pub expand: &'a [&'a str],
+
+    /// Set of key-value pairs that you can attach to an object.
+    ///
+    /// This can be useful for storing additional information about the object in a structured format.
+    /// Individual keys can be unset by posting an empty value to them.
+    /// All keys can be unset by posting an empty value to `metadata`.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub metadata: Option<Metadata>,
+
+    /// The recipient's full, legal name.
+    ///
+    /// For type `individual`, should be in the format `First Last`, `First Middle Last`, or `First M Last` (no prefixes or suffixes).
+    /// For `corporation`, the full, incorporated name.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub name: Option<&'a str>,
+
+    /// The recipient's tax ID, as a string.
+    ///
+    /// For type `individual`, the full SSN; for type `corporation`, the full EIN.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub tax_id: Option<&'a str>,
+}
+
+/// An enum representing the possible values of an `Recipient`'s `type` field.
+#[derive(Copy, Clone, Debug, Deserialize, Serialize, Eq, PartialEq)]
+#[serde(rename_all = "snake_case")]
+pub enum RecipientType {
+    Corporation,
+    Individual,
+}
