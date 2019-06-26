@@ -1,3 +1,4 @@
+use serde::{Deserialize, Serialize};
 use super::{Metadata, Timestamp, Currency, Identifier, IdentifierParam};
 
 #[derive(Debug, Copy, Clone, Serialize, Deserialize)]

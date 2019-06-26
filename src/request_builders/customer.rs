@@ -1,6 +1,8 @@
-use models::{Customer, CustomerParams, CustomerListParams, Source};
-use request::{Request, RequestWithBody, SimpleRequest};
+use serde::Serialize;
 use reqwest::Method;
+
+use crate::models::{Customer, CustomerParams, CustomerListParams, Source};
+use crate::request::{Request, RequestWithBody, SimpleRequest};
 
 use resx::{ResxInstanceRB, ResxPath, ResxRB};
 

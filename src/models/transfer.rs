@@ -1,4 +1,5 @@
-use models::{Metadata, List, RangeQuery, Timestamp, Currency};
+use serde::{Deserialize, Serialize};
+use super::{Metadata, List, RangeQuery, Timestamp, Currency};
 
 /// The set of parameters that can be used when creating a transfer.
 ///

@@ -1,3 +1,5 @@
+use serde::{Deserialize, Serialize};
+
 #[derive(Debug, PartialEq, Deserialize, Serialize)]
 #[serde(rename_all = "lowercase")]
 pub enum Currency {

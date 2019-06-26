@@ -1,5 +1,5 @@
-use super::{Metadata};
-use models::{List, Source, Subscription, RangeQuery, Timestamp, Address, ExternalAccountParam, Currency, Discount};
+use serde::{Deserialize, Serialize};
+use super::{List, Metadata, Source, RangeQuery, Timestamp, Address, ExternalAccountParam, Currency};
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct CustomerShippingDetails {
@@ -69,11 +69,9 @@ pub struct Customer {
     pub default_source: Option<String>,
     pub delinquent: bool,
     pub desc: Option<String>,
-    pub discount: Option<Discount>,
     pub email: Option<String>,
     pub livemode: bool,
     pub metadata: Metadata,
     pub shipping: Option<CustomerShippingDetails>,
     pub sources: List<Source>,
-    pub subscriptions: List<Subscription>,
 }

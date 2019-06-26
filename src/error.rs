@@ -1,3 +1,4 @@
+use serde::Deserialize;
 use std::io;
 use reqwest;
 use serde_json;
@@ -8,22 +9,22 @@ use failure::{Fail, SyncFailure};
 #[derive(Debug, Fail)]
 pub enum Error {
     /// An error reported by Stripe.
-    #[fail(display = "error reported by stripe")]
+    #[fail(display = "error reported by stripe: {:#?}", _0)]
     Stripe(RequestError),
     /// A networking error communicating with the Stripe server.
-    #[fail(display = "error communicating with stripe")]
+    #[fail(display = "error communicating with stripe: {}", _0)]
     Http(#[cause] reqwest::Error),
     /// Error serializing form body.
-    #[fail(display = "error serializing form body")]
+    #[fail(display = "error serializing form body: {}", _0)]
     FormSerialization(#[cause] failure::Error),
     //TODO: doc
-    #[fail(display = "error parsing url")]
+    #[fail(display = "error parsing url: {}", _0)]
     Url(#[cause] reqwest::UrlError),
     /// An error reading the response body.
-    #[fail(display = "error reading response from stripe")]
+    #[fail(display = "error reading response from stripe: {}", _0)]
     Io(#[cause] io::Error),
     /// An error converting between wire format and Rust types.
-    #[fail(display = "error converting between wire format and Rust types")]
+    #[fail(display = "error converting between wire format and Rust types: {}", _0)]
     Conversion(#[cause] failure::Error),
 }
 

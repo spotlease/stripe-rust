@@ -1,12 +1,4 @@
-extern crate serde;
-extern crate serde_json;
-extern crate serde_qs;
-#[macro_use] extern crate serde_derive;
-extern crate base64;
-extern crate reqwest;
-extern crate resx;
 #[macro_use] extern crate resx_derives;
-extern crate failure;
 
 mod client;
 mod models;

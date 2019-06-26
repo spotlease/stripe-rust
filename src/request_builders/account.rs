@@ -1,7 +1,8 @@
-use models::{Account, AccountCreateParams, AccountListParams, AccountUpdateParams};
-use request::{Request, SimpleRequest};
 use reqwest::Method;
-use models::{ExternalAccount, ExternalAccountListParams, ExternalAccountCreateParams, ExternalAccountUpdateParams};
+
+use crate::models::{Account, AccountCreateParams, AccountListParams, AccountUpdateParams};
+use crate::request::{Request, SimpleRequest};
+use crate::models::{ExternalAccount, ExternalAccountListParams, ExternalAccountCreateParams, ExternalAccountUpdateParams};
 
 use resx::{ResxInstanceRB, ResxPath, ResxRB};
 

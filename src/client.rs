@@ -1,12 +1,12 @@
 use reqwest::{Client as ReqwestClient, ClientBuilder as ReqwestClientBuilder, Url};
-use serde::ser::Serialize;
+use serde::{Deserialize, Serialize};
 use serde::de::DeserializeOwned;
 use serde_json;
 use std::time::Duration;
-use models::Result as StripeResult;
-use error::Error as StripeError;
-use error::RequestError as StripeRequestError;
-use request::{Request, RequestOptions};
+use crate::models::Result as StripeResult;
+use crate::error::Error as StripeError;
+use crate::error::RequestError as StripeRequestError;
+use crate::request::{Request, RequestOptions};
 use reqwest;
 use reqwest::header::{HeaderMap, HeaderValue};
 
