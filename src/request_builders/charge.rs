@@ -1,6 +1,7 @@
-use models::{Charge, ChargeCreateParams, ChargeUpdateParams, ChargeListParams};
-use request::{Request, SimpleRequest};
 use reqwest::Method;
+
+use crate::models::{Charge, ChargeCreateParams, ChargeUpdateParams, ChargeListParams};
+use crate::request::{Request, SimpleRequest};
 
 use resx::{ResxInstanceRB, ResxPath, ResxRB};
 

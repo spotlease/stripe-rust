@@ -1,3 +1,4 @@
+use serde::{Deserialize, Serialize};
 use super::Metadata;
 use super::CardCreateParams;
 use super::CardUpdateParams;

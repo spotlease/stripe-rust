@@ -1,5 +1,5 @@
-use super::Metadata;
-use models::{Address, Card, BankAccount, Currency};
+use serde::{Deserialize, Serialize};
+use super::{Metadata, Address, Card, BankAccount, Currency};
 
 #[derive(Serialize)]
 pub struct OwnerParams<'a> {

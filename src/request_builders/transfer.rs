@@ -1,4 +1,4 @@
-use models::{Transfer, TransferCreateParams, TransferUpdateParams, TransferListParams};
+use crate::models::{Transfer, TransferCreateParams, TransferUpdateParams, TransferListParams};
 
 use resx::{ResxInstanceRB, ResxPath, ResxRB};
 

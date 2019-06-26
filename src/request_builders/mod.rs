@@ -1,15 +1,15 @@
 use resx::{ResxInstanceRB, ResxPath};
 use serde::ser::Serialize;
 use serde::de::Deserialize;
+use reqwest::Method;
 
-use request::{Request, SimpleRequest, RequestWithBody, RequestWithQuery};
+use crate::request::{Request, SimpleRequest, RequestWithBody, RequestWithQuery};
 use self::account::AccountsRB;
 use self::customer::CustomersRB;
 use self::charge::ChargesRB;
 use self::transfer::TransfersRB;
 use self::refund::RefundsRB;
-use models::{List, Deleted};
-use reqwest::Method;
+use crate::models::{List, Deleted};
 
 macro_rules! resource {
     ($resource_name:ident, $builder:tt) => (

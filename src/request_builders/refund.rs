@@ -1,4 +1,4 @@
-use models::{Refund, RefundCreateParams, RefundUpdateParams, RefundListParams};
+use crate::models::{Refund, RefundCreateParams, RefundUpdateParams, RefundListParams};
 
 use resx::{ResxInstanceRB, ResxPath, ResxRB};
 

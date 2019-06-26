@@ -1,5 +1,5 @@
-use super::{Metadata, NullableOption};
-use models::{Address, Timestamp};
+use serde::{Deserialize, Serialize};
+use super::{Metadata, Address, Timestamp};
 
 #[derive(Debug, Default, Deserialize, Serialize)]
 pub struct DeclineChargeSettings {
@@ -117,7 +117,7 @@ pub struct AccountParams<'a> {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub email: Option<&'a str>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub business_url: NullableOption<&'a str>,
+    pub business_url: Option<&'a str>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub legal_entity: Option<LegalEntity>,
     #[serde(skip_serializing_if = "Option::is_none")]

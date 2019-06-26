@@ -4,8 +4,8 @@ use serde::de::DeserializeOwned;
 use serde::ser::Serialize;
 use std::marker::PhantomData;
 
-use client::Client;
-use models::Result as StripeResult;
+use crate::client::Client;
+use crate::models::Result as StripeResult;
 
 #[derive(Debug)]
 pub struct Request<Q: Serialize, B: Serialize, R: DeserializeOwned> {
