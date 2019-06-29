@@ -38,9 +38,9 @@ pub enum BusinessType {
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct DateOfBirth {
-    year: u64,
-    month: u64,
-    day: u64
+    year: Option<u64>,
+    month: Option<u64>,
+    day: Option<u64>
 }
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
@@ -115,6 +115,45 @@ pub struct PersonParams {
     pub verification: Option<PersonVerificationParams>,
 }
 
+#[derive(Clone, Debug, Default, Deserialize, Serialize)]
+pub struct BusinessProfile {
+    /// The merchant category code for the account.
+    ///
+    /// MCCs are used to classify businesses based on the goods or services they provide.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub mcc: Option<String>,
+
+    /// The customer-facing business name.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub name: Option<String>,
+
+    /// Internal-only description of the product sold or service provided by the business.
+    ///
+    /// It's used by Stripe for risk and underwriting purposes.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub product_description: Option<String>,
+
+    /// A publicly available mailing address for sending support issues to.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub support_address: Option<Address>,
+
+    /// A publicly available email address for sending support issues to.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub support_email: Option<String>,
+
+    /// A publicly available phone number to call with support issues.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub support_phone: Option<String>,
+
+    /// A publicly available website for handling support issues.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub support_url: Option<String>,
+
+    /// The business's publicly available website.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub url: Option<String>,
+}
+
 #[derive(Debug, Deserialize)]
 pub struct Account {
     pub id: String,
@@ -178,6 +217,10 @@ pub struct AccountParams<'a> {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub individual: Option<PersonParams>,
     #[serde(skip_serializing_if = "Option::is_none")]
+    pub requested_capabilities: Option<Vec<RequestedCapability>>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub business_profile: Option<BusinessProfile>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub tos_acceptance: Option<TOSAcceptanceDetails>,
 }
 
@@ -193,6 +236,15 @@ impl Default for AccountType {
     fn default() -> Self {
         AccountType::Standard
     }
+}
+
+#[derive(Copy, Clone, Debug, Deserialize, Serialize, Eq, PartialEq)]
+#[serde(rename_all = "snake_case")]
+pub enum RequestedCapability {
+    CardIssuing,
+    CardPayments,
+    LegacyPayments,
+    PlatformPayments,
 }
 
 /// The set of parameters that can be used when creating an account for users.
