@@ -31,35 +31,88 @@ pub struct TOSAcceptanceDetails {
 
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(rename_all = "snake_case")]
-pub enum LegalEntityType {
+pub enum BusinessType {
     Individual,
     Company
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct DateOfBirth {
-    year: Option<u64>,
-    month: Option<u64>,
-    day: Option<u64>
+    year: u64,
+    month: u64,
+    day: u64
 }
 
-#[derive(Debug, Default, Deserialize, Serialize)]
-pub struct LegalEntity {
-    #[serde(rename = "type")]
+#[derive(Clone, Debug, Deserialize, Serialize)]
+pub struct PersonVerificationDocumentParams {
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub entity_type: Option<LegalEntityType>,
+    pub back: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub front: Option<String>,
+}
+
+#[derive(Clone, Debug, Deserialize, Serialize)]
+pub struct PersonVerificationParams {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub document: Option<PersonVerificationDocumentParams>,
+}
+
+#[derive(Clone, Debug, Default, Deserialize, Serialize)]
+pub struct PersonParams {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub address: Option<Address>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub address_kana: Option<Address>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub address_kanji: Option<Address>,
+
     #[serde(skip_serializing_if = "Option::is_none")]
     pub dob: Option<DateOfBirth>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub email: Option<String>,
+
     #[serde(skip_serializing_if = "Option::is_none")]
     pub first_name: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub first_name_kana: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub first_name_kanji: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub gender: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub id_number: Option<String>,
+
     #[serde(skip_serializing_if = "Option::is_none")]
     pub last_name: Option<String>,
+
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub phone_number: Option<String>,
+    pub last_name_kana: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub last_name_kanji: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub maiden_name: Option<String>,
+
+    #[serde(default)]
+    pub metadata: Metadata,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub phone: Option<String>,
+
     #[serde(skip_serializing_if = "Option::is_none")]
     pub ssn_last_4: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub verification: Option<PersonVerificationParams>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -86,7 +139,9 @@ pub struct Account {
     pub email: Option<String>,
     // pub external_accounts: List<BankAccount>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub legal_entity: Option<LegalEntity>,
+    pub business_type: Option<BusinessType>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub individual: Option<PersonParams>,
     pub metadata: Metadata,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub payout_schedule: Option<PayoutSchedule>,
@@ -119,7 +174,9 @@ pub struct AccountParams<'a> {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub business_url: Option<&'a str>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub legal_entity: Option<LegalEntity>,
+    pub business_type: Option<BusinessType>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub individual: Option<PersonParams>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub tos_acceptance: Option<TOSAcceptanceDetails>,
 }
