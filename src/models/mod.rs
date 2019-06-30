@@ -1,10 +1,11 @@
 mod params;
 mod account;
+mod person;
 mod external_accounts;
 mod bank_account;
 mod card;
 mod customer;
-mod address;
+mod types;
 mod currency;
 mod source;
 mod charge;
@@ -13,11 +14,12 @@ mod transfer;
 
 pub use self::params::*;
 pub use self::account::*;
+pub use self::person::*;
 pub use self::external_accounts::*;
 pub use self::bank_account::*;
 pub use self::card::*;
 pub use self::customer::*;
-pub use self::address::*;
+pub use self::types::*;
 pub use self::currency::*;
 pub use self::source::*;
 pub use self::charge::*;
