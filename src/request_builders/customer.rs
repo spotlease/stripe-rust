@@ -1,7 +1,7 @@
 use serde::Serialize;
 use reqwest::Method;
 
-use crate::models::{Customer, CustomerParams, CustomerListParams, Source};
+use crate::models::{Customer, CustomerParams, CustomerListParams, Source, Deleted};
 use crate::request::{Request, RequestWithBody, SimpleRequest};
 
 use resx::{ResxInstanceRB, ResxPath, ResxRB};
@@ -27,7 +27,7 @@ impl CustomerRB {
             source: source_id
         })
     }
-    pub fn detach_source<'a>(mut self, source_id: &str) -> SimpleRequest<Source> {
+    pub fn detach_source<'a>(mut self, source_id: &str) -> SimpleRequest<Deleted> {
         self.0.push_str("/sources/");
         self.0.push_str(source_id);
         Request::new(Method::DELETE, self.0)
