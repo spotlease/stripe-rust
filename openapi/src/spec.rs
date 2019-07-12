@@ -17,6 +17,7 @@ pub struct Schema {
 pub enum SchemaData {
   Properties(BTreeMap<String, SchemaProperty>),
   Polymorphic(Vec<String>),
+  None
 }
 
 #[derive(Debug)]
@@ -67,12 +68,12 @@ pub fn parse() -> Result<Spec, ()> {
 }
 
 fn parse_schema(raw_schema: &serde_json::Value) -> Schema {
-  let raw_properties = match raw_schema["properties"].as_object() {
-    Some(some) => some,
-    None => panic!("no properties in schema {:?}", raw_schema),
-  };
+  // let raw_properties = match raw_schema["properties"].as_object() {
+  //   Some(some) => some,
+  //   None => panic!("no properties in schema {:?}", raw_schema),
+  // };
 
-  let data = if let Some(raw_properties) = raw_schema.get("properties").as_object() {
+  let data = if let Some(raw_properties) = raw_schema.get("properties") {
 
     let required_fields: BTreeSet<String> =
       raw_schema["required"]
@@ -95,7 +96,7 @@ fn parse_schema(raw_schema: &serde_json::Value) -> Schema {
 
     let mut properties = BTreeMap::new();
 
-    for (name, ty) in raw_properties {
+    for (name, ty) in raw_properties.as_object().unwrap() {
       let is_required = required_fields.contains(name);
       let is_expandable = expandable_fields.contains(name);
       properties.insert(
@@ -103,9 +104,21 @@ fn parse_schema(raw_schema: &serde_json::Value) -> Schema {
         parse_schema_property(ty, is_required, is_expandable),
       );
     }
-  } else if let Some(any_of) = raw_schema.get("anyOf").as_array() {
-    
-  }
+
+    SchemaData::Properties(properties)
+
+  } else if let Some(any_of) = raw_schema.get("anyOf") {
+    let any_of = any_of.as_array().unwrap();
+    SchemaData::Polymorphic(
+      any_of.iter().map(|x| {
+        x.as_object().unwrap().get("$ref").unwrap().as_str().unwrap().to_string()
+      })
+      .collect()
+    )
+  } else {
+    SchemaData::None
+    // panic!("any_of {:?}", raw_schema);
+  };
 
   Schema {
     is_resource: raw_schema["x-resourceId"].is_string(),
