@@ -11,6 +11,7 @@ pub use request::Request;
 pub use models::*;
 pub use request_builders::*;
 pub use error::Error;
+pub use error::RequestError;
 
 use request_builders::RootRB;
 
