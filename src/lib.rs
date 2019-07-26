@@ -20,7 +20,7 @@ pub fn request() -> RootRB {
 
 #[cfg(test)]
 mod tests {
-    use super::{Request, Client};
+    use super::Client;
     use super::request_builders::StripeResourceRB;
 
     #[test]
