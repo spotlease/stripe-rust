@@ -76,7 +76,6 @@ impl Client {
         }
 
         if let Some(ref request_body) = request.body {
-            use serde_qs;
             let serialized_body = serde_qs::to_string(request_body)?;
             reqwest_request_builder = reqwest_request_builder.body(serialized_body);
         }
