@@ -1,5 +1,5 @@
 use serde::{Deserialize, Serialize};
-use crate::models::{Metadata, List, Source, RangeQuery, Timestamp, Address, ExternalAccountParam, Currency, Refund};
+use crate::models::{Metadata, List, RangeQuery, Timestamp, Address, ExternalAccountParam, Currency, Refund, Source};
 use crate::error::ErrorCode;
 
 #[derive(Debug, Deserialize)]
@@ -36,6 +36,13 @@ pub struct ShippingDetails {
     pub tracking_number: Option<String>,
 }
 
+#[derive(Debug, Deserialize, Serialize)]
+pub struct TransferData {
+    pub destination: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub amount: Option<u64>,
+}
+
 /// The set of parameters that can be used when capturing a charge.
 ///
 /// For more details see https://stripe.com/docs/api#charge_capture.
@@ -66,31 +73,31 @@ pub struct ChargeCreateParams<'a> {
     pub amount: u64,
     pub currency: Currency,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub application_fee: Option<u64>,
+    pub application_fee_amount: Option<u64>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub capture: Option<bool>, // NOTE: if None, Stripe assumes true
+    pub capture: Option<bool>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub customer: Option<&'a str>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub description: Option<&'a str>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub destination: Option<DestinationParams<'a>>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub fraud_details: Option<FraudDetails>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub transfer_group: Option<&'a str>,
+    pub metadata: Option<Metadata>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub on_behalf_of: Option<&'a str>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub metadata: Option<Metadata>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub receipt_email: Option<&'a str>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub shipping: Option<ShippingDetails>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub customer: Option<&'a str>,
-    #[serde(skip_serializing_if = "Option::is_none")]
     pub source: Option<ExternalAccountParam<'a>>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub statement_descriptor: Option<&'a str>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub statement_descriptor_suffix: Option<&'a str>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub transfer_data: Option<TransferData>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub transfer_group: Option<&'a str>,
 }
 
 /// The set of parameters that can be used when creating or updating a charge.
@@ -114,39 +121,6 @@ pub struct ChargeUpdateParams<'a> {
     pub transfer_group: Option<&'a str>,
 }
 
-#[derive(Serialize)]
-#[serde(rename_all = "snake_case")]
-pub enum SourceType {
-    All,
-    AlipayAccount,
-    BankAccount,
-    BitcoinReceiver,
-    Card,
-}
-
-#[derive(Serialize)]
-pub struct SourceFilter {
-    pub object: SourceType,
-}
-
-impl SourceFilter {
-    pub fn all() -> SourceFilter {
-        SourceFilter { object: SourceType::All }
-    }
-    pub fn alipay() -> SourceFilter {
-        SourceFilter { object: SourceType::AlipayAccount }
-    }
-    pub fn bank() -> SourceFilter {
-        SourceFilter { object: SourceType::BankAccount }
-    }
-    pub fn bitcoin() -> SourceFilter {
-        SourceFilter { object: SourceType::BitcoinReceiver }
-    }
-    pub fn card() -> SourceFilter {
-        SourceFilter { object: SourceType::Card }
-    }
-}
-
 /// The set of parameters that can be used when listing charges.
 ///
 /// For more details see https://stripe.com/docs/api#list_charges
@@ -161,7 +135,7 @@ pub struct ChargeListParams<'a> {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub limit: Option<i64>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub source: Option<SourceFilter>,
+    pub payment_intent: Option<&'a str>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub starting_after: Option<&'a str>,
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -185,7 +159,6 @@ pub struct Charge {
     pub currency: Currency,
     pub customer: Option<String>,
     pub description: Option<String>,
-    pub destination: Option<String>,
     pub dispute: Option<String>,
     pub failure_code: Option<ErrorCode>,
     pub failure_message: Option<String>,
@@ -197,15 +170,18 @@ pub struct Charge {
     pub order: Option<String>,
     pub outcome: Option<ChargeOutcome>,
     pub paid: bool,
+    pub payment_method: Option<String>,
     pub receipt_email: Option<String>,
     pub receipt_number: Option<String>,
     pub refunded: bool,
     pub refunds: List<Refund>,
     pub shipping: Option<ShippingDetails>,
-    pub source: Source,
+    pub source: Option<Source>,
     pub source_transfer: Option<String>,
     pub statement_descriptor: Option<String>,
-    pub status: String, // (succeeded, pending, failed)
+    pub statement_descriptor_suffix: Option<String>,
+    pub status: String,
     pub transfer: Option<String>,
+    pub transfer_data: Option<TransferData>,
     pub transfer_group: Option<String>,
 }

@@ -1,12 +1,5 @@
 use serde::{Deserialize, Serialize};
-use super::{List, Metadata, Source, RangeQuery, Timestamp, Address, ExternalAccountParam, Currency};
-
-#[derive(Debug, Deserialize, Serialize)]
-pub struct CustomerShippingDetails {
-    pub address: Address,
-    pub name: String,
-    pub phone: String,
-}
+use super::{Currency, ExternalAccountParam, List, Metadata, RangeQuery, Source, Timestamp};
 
 #[derive(Debug, Serialize)]
 #[serde(untagged)]
@@ -22,21 +15,19 @@ pub enum CustomerSourceParam<'a> {
 #[derive(Default, Serialize)]
 pub struct CustomerParams<'a> {
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub account_balance: Option<i64>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub business_vat_id: Option<&'a str>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub coupon: Option<&'a str>,
-    #[serde(skip_serializing_if = "Option::is_none", rename="default_source")]
+    pub balance: Option<i64>,
+    #[serde(skip_serializing_if = "Option::is_none", rename = "default_source")]
     pub default_source_id: Option<&'a str>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub description: Option<&'a str>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub email: Option<&'a str>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub metadata: Option<Metadata>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub shipping: Option<CustomerShippingDetails>,
+    pub name: Option<&'a str>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub payment_method_id: Option<&'a str>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub phone: Option<&'a str>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub source: Option<CustomerSourceParam<'a>>,
 }
@@ -62,16 +53,15 @@ pub struct CustomerListParams<'a> {
 #[derive(Debug, Deserialize)]
 pub struct Customer {
     pub id: String,
-    pub account_balance: i64,
-    pub business_vat_id: Option<String>,
+    pub balance: i64,
     pub created: u64,
     pub currency: Option<Currency>,
-    pub default_source: Option<String>,
-    pub delinquent: bool,
-    pub desc: Option<String>,
+    #[serde(rename = "default_source")]
+    pub default_source_id: Option<String>,
     pub email: Option<String>,
     pub livemode: bool,
     pub metadata: Metadata,
-    pub shipping: Option<CustomerShippingDetails>,
+    pub name: Option<String>,
+    pub phone: Option<String>,
     pub sources: List<Source>,
 }

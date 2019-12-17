@@ -1,15 +1,15 @@
-use resx::{ResxInstanceRB, ResxPath};
-use serde::ser::Serialize;
-use serde::de::Deserialize;
 use reqwest::Method;
+use resx::{ResxInstanceRB, ResxPath};
+use serde::de::Deserialize;
+use serde::ser::Serialize;
 
-use crate::request::{Request, SimpleRequest, RequestWithBody, RequestWithQuery};
 use self::account::AccountsRB;
-use self::customer::CustomersRB;
 use self::charge::ChargesRB;
-use self::transfer::TransfersRB;
+use self::customer::CustomersRB;
 use self::refund::RefundsRB;
-use crate::models::{List, Deleted};
+use self::transfer::TransfersRB;
+use crate::models::{Deleted, List};
+use crate::request::{Request, RequestWithBody, RequestWithQuery, SimpleRequest};
 
 macro_rules! resource {
     ($resource_name:ident, $builder:tt) => (
@@ -21,10 +21,10 @@ macro_rules! resource {
 }
 
 pub mod account;
-pub mod customer;
 pub mod charge;
-pub mod transfer;
+pub mod customer;
 pub mod refund;
+pub mod transfer;
 
 pub trait StripeResourceRB<LP, CP, M, IRB>: ResxPath
 where
