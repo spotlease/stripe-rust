@@ -398,6 +398,8 @@ pub struct AccountParams<'a> {
     pub business_profile: Option<BusinessProfile>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub tos_acceptance: Option<TosAcceptance>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub settings: Option<AccountSettingsParams>,
 }
 
 
@@ -489,7 +491,7 @@ pub struct AcceptTos {
     pub user_agent: Option<String>,
 }
 
-#[derive(Clone, Debug, Deserialize, Serialize)]
+#[derive(Clone, Debug, Default, Deserialize, Serialize)]
 pub struct AccountSettingsParams {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub branding: Option<BrandingSettingsParams>,
@@ -633,7 +635,7 @@ pub struct PaymentsSettingsParams {
     pub statement_descriptor_kanji: Option<String>,
 }
 
-#[derive(Clone, Debug, Deserialize, Serialize)]
+#[derive(Clone, Debug, Default, Deserialize, Serialize)]
 pub struct PayoutSettingsParams {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub debit_negative_balances: Option<bool>,
@@ -669,7 +671,7 @@ pub struct PersonVerificationDocumentParams {
     pub front: Option<String>,
 }
 
-#[derive(Clone, Debug, Deserialize, Serialize)]
+#[derive(Clone, Debug, Default, Deserialize, Serialize)]
 pub struct TransferScheduleParams {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub delay_days: Option<DelayDays>,
