@@ -6,6 +6,7 @@ use serde::ser::Serialize;
 use self::account::AccountsRB;
 use self::charge::ChargesRB;
 use self::customer::CustomersRB;
+use self::payout::PayoutsRB;
 use self::refund::RefundsRB;
 use self::transfer::TransfersRB;
 use crate::models::{Deleted, List};
@@ -23,6 +24,7 @@ macro_rules! resource {
 pub mod account;
 pub mod charge;
 pub mod customer;
+pub mod payout;
 pub mod refund;
 pub mod transfer;
 
@@ -73,8 +75,9 @@ impl RootRB {
         RootRB(String::with_capacity(256))
     }
     resource!(account, AccountsRB);
-    resource!(customer, CustomersRB);
     resource!(charge, ChargesRB);
-    resource!(transfer, TransfersRB);
+    resource!(customer, CustomersRB);
+    resource!(payout, PayoutsRB);
     resource!(refund, RefundsRB);
+    resource!(transfer, TransfersRB);
 }
