@@ -438,7 +438,7 @@ pub enum RequestedCapability {
     CardIssuing,
     CardPayments,
     LegacyPayments,
-    PlatformPayments,
+    Transfers,
 }
 
 /// An enum representing the possible values of an `TransferScheduleParams`'s `interval` field.
