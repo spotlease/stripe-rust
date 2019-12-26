@@ -6,7 +6,8 @@ use super::{Metadata, Timestamp, Currency, Identifier, IdentifierParam};
 pub enum RefundReason {
     Duplicate,
     Fraudulent,
-    RequestedByCustomer
+    RequestedByCustomer,
+    ExpiredUncapturedCharge
 }
 
 #[derive(Debug, Copy, Clone, Deserialize)]
