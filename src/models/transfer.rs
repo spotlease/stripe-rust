@@ -45,6 +45,34 @@ pub struct TransferListParams<'a> {
     pub transfer_group: Option<&'a str>,
 }
 
+#[derive(Default, Serialize)]
+pub struct TransferReversalListParams<'a> {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub ending_before: Option<&'a str>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub limit: Option<i64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub starting_after: Option<&'a str>,
+}
+
+#[derive(Default, Serialize)]
+pub struct TransferReversalCreateParams<'a> {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub amount: Option<u64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub description: Option<&'a str>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub metadata: Option<&'a Metadata>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub refund_application_fee: Option<bool>,
+}
+
+#[derive(Default, Serialize)]
+pub struct TransferReversalUpdateParams<'a> {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub metadata: Option<&'a Metadata>
+}
+
 /// The resource representing a Stripe transfer reversal.
 ///
 /// For more details see https://stripe.com/docs/api#transfer_reversal_object.
