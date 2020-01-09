@@ -84,11 +84,11 @@ impl Client {
 
         let reqwest_request = reqwest_request_builder.build()?;
 
-        println!("stripe request: {:?}", reqwest_request);
+        debug!("stripe request: {:?}", reqwest_request);
 
         {
             let request_body = reqwest_request.body();
-            println!("stripe request body: {:?}", request_body);
+            debug!("stripe request body: {:?}", request_body);
         }
 
         let response = self.inner.execute(reqwest_request)?;
@@ -98,9 +98,6 @@ impl Client {
             error: StripeRequestError
         }
         let http_status = response.status().as_u16();
-        // println!("start stripe response body");
-        // serde_json::from_reader(reader)
-        // println!("end stripe response body");
         match http_status {
             200 => parse_response(response),
             _ => {
@@ -116,7 +113,7 @@ impl Client {
 fn parse_response<T: DeserializeOwned>(mut response: reqwest::Response) -> StripeResult<T> {
     {
         let res_text = response.text()?;
-        println!("stripe response body: {}", res_text);
+        debug!("stripe response body: {}", res_text);
         serde_json::from_str(&res_text)
     }
     .map_err(|err| StripeError::from(err))
