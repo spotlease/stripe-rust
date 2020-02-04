@@ -18,8 +18,8 @@ log = "0.4"
 
 [dependencies.resx]
 git = "https://github.com/spotlease/resx"
-rev = "1cbe61f60ddb1fddd9b7fa8a0f9b7133cebc1567"
+rev = "0c7584d50cfcfe5c458638318a41196db306f6b1"
 
 [dependencies.resx_derives]
 git = "https://github.com/spotlease/resx"
-rev = "1cbe61f60ddb1fddd9b7fa8a0f9b7133cebc1567"
+rev = "0c7584d50cfcfe5c458638318a41196db306f6b1"
